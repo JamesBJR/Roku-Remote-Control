@@ -77,13 +77,16 @@ def get_installed_apps():
 def create_gui():
     root = tk.Tk()
     root.title("Roku Remote Control")
+    root.configure(bg='#2e2e2e')  # Set background color for the main window
 
     style = ttk.Style()
-    style.configure("TButton", font=("Helvetica", 10), padding=5)
-    style.configure("Symbol.TButton", font=("Helvetica", 20), padding=5)
-    style.configure("TFrame", padding=10)
-    style.configure("TLabel", font=("Helvetica", 12))
-    style.configure("Red.TButton", font=("Helvetica", 20), background="red", foreground="black")  # Add this line to configure the red button style
+    style.theme_use('clam')  # Use 'clam' theme for better customization
+    style.configure("TButton", font=("Helvetica", 10), padding=5, background='#4d4d4d', foreground='#ffffff')
+    style.configure("Symbol.TButton", font=("Helvetica", 20), padding=5, background='#4d4d4d', foreground='#ffffff')
+    style.configure("TFrame", padding=10, background='#2e2e2e')
+    style.configure("TLabel", font=("Helvetica", 12), background='#2e2e2e', foreground='#ffffff')
+    style.configure("Red.TButton", font=("Helvetica", 20), background="red", foreground="black")
+    style.configure("Fancy.TLabelframe.Label", font=("Helvetica", 14, "bold"), foreground="#FFD700", background='#2e2e2e')  # Custom style for group box titles
 
     def on_key_press(event):
         key_mapping = {
@@ -110,7 +113,8 @@ def create_gui():
 
         ip_window = tk.Toplevel(root)
         ip_window.title("Set Roku IP Address")
-        tk.Label(ip_window, text="Enter Roku TV IP Address:\nHome -> Settings -> Network -> About -> IP address").pack(pady=5)
+        ip_window.configure(bg='#2e2e2e')
+        tk.Label(ip_window, text="Enter Roku TV IP Address:\nHome -> Settings -> Network -> About -> IP address", bg='#2e2e2e', fg='#ffffff').pack(pady=5)
         ip_entry = tk.Entry(ip_window)
         ip_entry.pack(pady=5)
         ip_entry.insert(0, ROKU_TV_IP)
@@ -119,7 +123,7 @@ def create_gui():
     root.bind('<KeyPress>', on_key_press)
 
     # Frame for IP, Power, and Apps buttons
-    top_frame = ttk.LabelFrame(root, text="Settings")
+    top_frame = ttk.LabelFrame(root, text="Settings", style="TFrame", labelwidget=ttk.Label(root, text="Settings", style="Fancy.TLabelframe.Label"))
     top_frame.pack(fill='x', padx=10, pady=10)
 
     # IP button at the top left
@@ -139,11 +143,11 @@ def create_gui():
     btn_youtube_url.pack(side='left', padx=5, pady=5)
 
     # Navigation and Volume frames
-    nav_vol_frame = ttk.Frame(root)
+    nav_vol_frame = ttk.Frame(root, style="TFrame")
     nav_vol_frame.pack(pady=10, fill="x")
 
     # Navigation buttons
-    nav_frame = ttk.LabelFrame(nav_vol_frame, text="Navigation")
+    nav_frame = ttk.LabelFrame(nav_vol_frame, text="Navigation", style="TFrame", labelwidget=ttk.Label(root, text="Navigation", style="Fancy.TLabelframe.Label"))
     nav_frame.pack(side='left', padx=10, pady=10)
 
     btn_up = ttk.Button(nav_frame, text='↑', command=lambda: send_roku_command('keypress/Up'), style="Symbol.TButton", width=5)
@@ -162,7 +166,7 @@ def create_gui():
     btn_down.grid(row=2, column=1, pady=5)
 
     # Volume buttons
-    vol_frame = ttk.LabelFrame(nav_vol_frame, text="Volume")
+    vol_frame = ttk.LabelFrame(nav_vol_frame, text="Volume", style="TFrame", labelwidget=ttk.Label(root, text="Volume", style="Fancy.TLabelframe.Label"))
     vol_frame.pack(side='left', padx=10, pady=10)
 
     btn_vol_up = ttk.Button(vol_frame, text='🔊', command=lambda: send_roku_command('keypress/VolumeUp'), style="Symbol.TButton", width=5)
@@ -175,11 +179,11 @@ def create_gui():
     btn_mute.grid(row=0, column=1, padx=5, pady=5)
 
     # Controls and Channels frames
-    ctrl_ch_frame = ttk.Frame(root)
+    ctrl_ch_frame = ttk.Frame(root, style="TFrame")
     ctrl_ch_frame.pack(pady=10, fill="x")
 
     # Control buttons
-    ctrl_frame = ttk.LabelFrame(ctrl_ch_frame, text="Controls")
+    ctrl_frame = ttk.LabelFrame(ctrl_ch_frame, text="Controls", style="TFrame", labelwidget=ttk.Label(root, text="Controls", style="Fancy.TLabelframe.Label"))
     ctrl_frame.pack(side='left', padx=10, pady=10)
 
     btn_back = ttk.Button(ctrl_frame, text='↩', command=lambda: send_roku_command('keypress/Back'), style="Symbol.TButton", width=5)
@@ -198,7 +202,7 @@ def create_gui():
     btn_fast_forward.grid(row=1, column=2, padx=5, pady=5)
 
     # Channel buttons
-    ch_frame = ttk.LabelFrame(ctrl_ch_frame, text="Channels")
+    ch_frame = ttk.LabelFrame(ctrl_ch_frame, text="Channels", style="TFrame", labelwidget=ttk.Label(root, text="Channels", style="Fancy.TLabelframe.Label"))
     ch_frame.pack(side='left', padx=50, pady=10) 
 
     btn_ch_up = ttk.Button(ch_frame, text='🔼', command=lambda: send_roku_command('keypress/ChannelUp'), style="Symbol.TButton", width=5)
@@ -208,7 +212,7 @@ def create_gui():
     btn_ch_down.grid(row=1, column=0, padx=5, pady=5)
 
     # Input buttons
-    input_frame = ttk.LabelFrame(root, text="Inputs")
+    input_frame = ttk.LabelFrame(root, text="Inputs", style="TFrame", labelwidget=ttk.Label(root, text="Inputs", style="Fancy.TLabelframe.Label"))
     input_frame.pack(pady=10, fill="x")
 
     btn_hdmi1 = ttk.Button(input_frame, text='HDMI 1', command=lambda: send_roku_command('keypress/InputHDMI1'))
@@ -227,7 +231,7 @@ def create_gui():
     btn_av.grid(row=0, column=4, padx=5, pady=5)
 
     # App buttons
-    app_frame = ttk.LabelFrame(root, text="Apps")
+    app_frame = ttk.LabelFrame(root, text="Apps", style="TFrame", labelwidget=ttk.Label(root, text="Apps", style="Fancy.TLabelframe.Label"))
     app_frame.pack(pady=10, fill="x")
 
     app_colors = {
@@ -278,7 +282,7 @@ def create_gui():
         button = ttk.Button(app_frame, text=text, width=15, command=lambda cmd=command: send_roku_command(cmd))
         button.grid(row=i // 4, column=i % 4, padx=5, pady=5)  # Adjust row and column to accommodate new button
         button.configure(style=f"{text}.TButton")
-        style.configure(f"{text}.TButton", background=app_colors.get(text, '#FFFFFF'), foreground=app_colors.get(text, '#FFFFFF'))  # Set text color to match border color
+        style.configure(f"{text}.TButton", background=app_colors.get(text, '#4d4d4d'), foreground='#ffffff')
 
     # Update the window size to fit all widgets
     root.update_idletasks()
@@ -295,7 +299,8 @@ def open_youtube_video(root):
 
     url_window = tk.Toplevel(root)
     url_window.title("Open YouTube Video")
-    tk.Label(url_window, text="Enter text").pack(pady=5)
+    url_window.configure(bg='#2e2e2e')
+    tk.Label(url_window, text="Enter text", bg='#2e2e2e', fg='#ffffff').pack(pady=5)
     url_entry = tk.Entry(url_window)
     url_entry.pack(pady=5)
     tk.Button(url_window, text="Open Youtube URL", command=play_video).pack(pady=5)
