@@ -4,14 +4,27 @@ from tkinter import ttk, messagebox
 import winsound
 import json
 import os
+import sys
 import xml.etree.ElementTree as ET
 
+# Determine the base path
+if getattr(sys, 'frozen', False):
+    # If the application is run as a bundle, the PyInstaller bootloader
+    # extends the sys module by a flag frozen=True and sets the app path into variable _MEIPASS'.
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.dirname(os.path.abspath(__file__))
+
 # Default configuration
-CONFIG_PATH = "C:/GitHubRepos/MyPythonScripts/CastToTV/config.json"
+CONFIG_DIR = os.path.join(os.path.expanduser("~"), ".roku_remote_control")
+CONFIG_PATH = os.path.join(CONFIG_DIR, "Roku-Remote_Config.json")
 DEFAULT_CONFIG = {
     "roku_ip": "192.168.1.207",
-    "sound_effect_path": "C:/GitHubRepos/MyPythonScripts/CastToTV/269504__michorvath__button-click.wav"
+    "sound_effect_path": os.path.join(base_path, "Soundeffects", "269504__michorvath__button-click.wav")
 }
+
+# Ensure the configuration directory exists
+os.makedirs(CONFIG_DIR, exist_ok=True)
 
 # Load configuration
 if os.path.exists(CONFIG_PATH):
@@ -44,7 +57,6 @@ def send_roku_command(command):
         print(f"Successfully sent command: {command}")
     except requests.RequestException as e:
         print(f"Failed to send command: {command}. Error: {e}, most likely because the Roku TV is loading app content.")
-
 
 def get_installed_apps():
     roku_url = f"http://{ROKU_TV_IP}:8060/query/apps"

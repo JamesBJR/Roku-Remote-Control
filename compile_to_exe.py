@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import os
+import shutil  # Add this line to import the shutil module
 
 def compile_to_exe(spec_path):
     if not os.path.exists(spec_path):
@@ -15,6 +16,12 @@ def compile_to_exe(spec_path):
     try:
         subprocess.run(command, check=True)
         print("Compilation successful. The executable is located in the 'dist' directory.")
+        
+        # Delete the build folder
+        build_dir = os.path.join(os.path.dirname(spec_path), 'build')
+        if os.path.exists(build_dir):
+            shutil.rmtree(build_dir)
+            print("Build folder deleted.")
     except subprocess.CalledProcessError as e:
         print(f"Error during compilation: {e}")
 
